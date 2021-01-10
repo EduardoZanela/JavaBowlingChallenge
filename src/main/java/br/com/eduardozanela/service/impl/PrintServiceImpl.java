@@ -13,6 +13,8 @@ public class PrintServiceImpl implements PrintService {
 	private String stringScore = "";
 
 	private static final String PRINT_HEADER = "Frame\t\t1\t\t2\t\t3\t\t4\t\t5\t\t6\t\t7\t\t8\t\t9\t\t10\n";
+	
+	private static final String STRIKE = "X";
 
 	private static final String PRINT_SCORE_LABEL = "\nScore\t\t";
 
@@ -32,7 +34,10 @@ public class PrintServiceImpl implements PrintService {
 			string.append(PRINT_PINFALLS_LABEL);
 
 			game.getScores().forEach(frame -> {
-				string.append(printBasic(frame.getPinFalls()));
+				if (frame.getPinFalls().stream().anyMatch(item -> item.equalsIgnoreCase("X")) && frame.getPinFalls().size() < 2)
+					string.append(printStrike());
+				else
+					string.append(printBasic(frame.getPinFalls()));
 				stringScore += frame.getScore() + TAB + TAB;
 			});
 
@@ -50,4 +55,15 @@ public class PrintServiceImpl implements PrintService {
 	public String printBasic(List<String> frame) {
 		return frame.stream().map(roll -> roll + TAB).collect(Collectors.joining());
 	}
+	
+	@Override
+	public String printStrike() {
+		return "\t" + STRIKE + "\t";
+	}
+	
+	@Override
+	public String printSpare(List<String> spare) {
+		return spare.get(0) + TAB + "/" + TAB;
+	}
+
 }

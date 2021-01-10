@@ -37,7 +37,7 @@ public class PlayerScoreServiceImpl implements PlayerScoreService {
 		return printService.getResultsString(players);
 	}
 	
-	private List<Player> convertPlayerScore(List<String> scores) {
+	public List<Player> convertPlayerScore(List<String> scores) {
 		Map<String, List<String>> scoreBoard = scores.stream()
 				.map(s -> s.split("\\t"))
 				.collect(Collectors.groupingBy(a -> a[0], Collectors.mapping(a -> validateScore(a[1]), Collectors.toList())));
@@ -52,7 +52,7 @@ public class PlayerScoreServiceImpl implements PlayerScoreService {
 	
 	private List<GameRounds> createGameRounds(List<String> plays) {
 		
-		if(plays.size() < 11) {
+		if(plays.size() < 12) {
 			throw new ProcessingExeption("Invalid number of rounds", ErrorCode.INVALID_ROUNDS);
 		}
 		List<GameRounds> rounds = new ArrayList<>();
@@ -63,10 +63,16 @@ public class PlayerScoreServiceImpl implements PlayerScoreService {
 				List<String> pinFalls = new ArrayList<>();
 				if(STRIKE_POINTS.equalsIgnoreCase(plays.get(i))) {
 					pinFalls.add(STRIKE);
-					score += Integer.valueOf(plays.get(i)) + Integer.valueOf(plays.get(i+1)) + Integer.valueOf(plays.get(i+2));
+					if(plays.size()-2 <= i) {
+						score += Integer.valueOf(plays.get(i));
+					} else {
+						score += Integer.valueOf(plays.get(i)) + Integer.valueOf(plays.get(i+1)) + Integer.valueOf(plays.get(i+2));
+					}
 				} else {
 					pinFalls.add(plays.get(i));
-					if(isSpare(plays.get(i), plays.get(++i))) {
+					if(plays.size()-1 == i) {
+						score += getFormatedValue(plays.get(i)) ;
+					} else if(isSpare(plays.get(i), plays.get(++i))) {
 						pinFalls.add(SPARE);
 						score += 10 + getFormatedValue(plays.get(i+1));
 					} else {				
@@ -81,6 +87,7 @@ public class PlayerScoreServiceImpl implements PlayerScoreService {
 				}
 			}
 		} catch (IndexOutOfBoundsException e) {
+			log.error("", e);
 			throw new ProcessingExeption("Invalid number of plays", ErrorCode.INVALID_ROUNDS);
 		}
 				

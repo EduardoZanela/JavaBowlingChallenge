@@ -8,6 +8,10 @@ public interface PrintService {
 
 	public String getResultsString(List<Player> games);
 
+	public String printSpare(List<String> spare);
+
 	public String printBasic(List<String> frame);
+
+	public String printStrike();
 
 }
