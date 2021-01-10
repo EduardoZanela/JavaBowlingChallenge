@@ -9,13 +9,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Player {
+public class GameRounds {
 	
-	private String name;
-	private List<GameRounds> scores;
+	private List<String> pinFalls;
+	private Integer score;
 	
-	@Override
-	public String toString() {
-		return name + " " + scores.toString();
+	public GameRounds(List<String> pinFalls) {
+		this.pinFalls = pinFalls;
 	}
 }
