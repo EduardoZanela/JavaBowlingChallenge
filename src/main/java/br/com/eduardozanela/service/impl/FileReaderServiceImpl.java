@@ -1,4 +1,4 @@
-package br.com.eduardozanela.utils;
+package br.com.eduardozanela.service.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,12 +9,14 @@ import org.apache.commons.io.FilenameUtils;
 
 import br.com.eduardozanela.constant.ErrorCode;
 import br.com.eduardozanela.exception.ProcessingExeption;
+import br.com.eduardozanela.service.FileReaderService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class FileReader {
+public class FileReaderServiceImpl implements FileReaderService {
 	
-	public static List<String> readFile(String fileName) throws ProcessingExeption {
+	@Override
+	public List<String> readFile(String fileName) throws ProcessingExeption {
 		String normalized = FilenameUtils.normalize(fileName);
 		File file = new File(normalized); 
 		try {
